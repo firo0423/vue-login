@@ -36,13 +36,13 @@
         ></el-input>
         <img :src="captchaUrl" />
       </el-form-item>
-      <el-checkbox
-        v-model="checked"
-        style="width: 100%"
-        class="loginRemember"
-        ref="re"
-        >记住我</el-checkbox
-      >
+      <div class="footer">
+        <el-checkbox v-model="checked" class="loginRemember" ref="re"
+          >记住我</el-checkbox
+        >
+        <router-link to="/Register">注册</router-link>
+      </div>
+
       <el-button
         type="primary"
         size="default"
@@ -85,6 +85,14 @@ export default {
     login(e) {
       // 用来书写axios请求
       // console.log(this.loginForm.password);
+      if (!this.loginForm.username) {
+        this.$message({
+          showClose: true,
+          message: "请输入账号密码",
+          type: "error",
+        });
+        return false;
+      }
       this.$axios
         .post(this.HOST + "/api/login", {
           username: this.loginForm.username,
@@ -134,7 +142,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .loginContainer {
   border-radius: 15px;
   background-clip: padding-box;
@@ -152,5 +160,18 @@ export default {
 .loginRemember {
   text-align: left;
   margin: 0 0 15px 0;
+}
+.footer .el-checkbox {
+  float: left;
+}
+.footer a {
+  display: block;
+  float: right;
+  text-decoration: none;
+  color: #e0e0e0;
+  transition: all 0.2s;
+}
+.footer a:hover {
+  color: black;
 }
 </style>

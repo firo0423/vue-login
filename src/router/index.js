@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/Login'
+import Register from '../views/Register'
 // 安装路由
 Vue.use(VueRouter)
 
@@ -11,8 +12,14 @@ const routes = [
     path: '/',
     name: 'Login',
     // 需要跳转的组件
-    component: Login
+    component: Login,
+
   },
+  {
+    path:'/Register',
+    name: 'Register',
+    component:Register,
+  }
 ]
 // 创建实例
 const router = new VueRouter({
