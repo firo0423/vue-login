@@ -1,6 +1,5 @@
 <template>
   <div>
-   
     <!-- register -->
     <!-- 表单合适需要添加 :rules="rules" rules就是数据里面的规则 同时还要在item下加prop绑定对应规则-->
     <el-form
@@ -10,18 +9,18 @@
       class="loginContainer"
     >
       <h3 class="loginTitle">注册</h3>
-    
+
       <el-form-item prop="username">
         <el-input
           type="text"
-          v-model="register.username"
+          v-model="registerForm.username"
           placeholder="请输入用户名"
           auto-complete="false"
         ></el-input>
       </el-form-item>
       <el-form-item prop="password">
         <el-input
-          v-model="register.password"
+          v-model="registerForm.password"
           placeholder="请输入密码"
           size="normal"
           type="password"
@@ -30,7 +29,7 @@
       </el-form-item>
       <el-form-item prop="password2">
         <el-input
-          v-model="register.password2"
+          v-model="registerForm.password2"
           placeholder="请再次输入密码"
           size="normal"
           auto-complete="false"
@@ -38,7 +37,7 @@
           style="magin-right: 5px"
         ></el-input>
       </el-form-item>
-       <router-link to="/" class="backtext">返回登录页面</router-link>
+      <router-link to="/" class="backtext">返回登录页面</router-link>
       <el-button
         type="primary"
         size="default"
@@ -46,12 +45,12 @@
         @click="register"
         >注册</el-button
       >
-      
     </el-form>
   </div>
 </template>
 
 <script>
+import { nanoid } from "nanoid";
 export default {
   name: "Register",
   data() {
@@ -73,17 +72,49 @@ export default {
     };
   },
   methods: {
+    verify() {
+      if (this.registerForm.password !== this.registerForm.password2) {
+        this.$message({
+          showClose: true,
+          message: "两次密码不一致",
+          type: "error",
+        });
+        return;
+      }
+    },
     register() {
-      console.log(1);
+      this.verify();
+      this.$axios
+        .post(this.HOST + "/api/register", {
+          id: nanoid(),
+          username: this.registerForm.username,
+          password: this.registerForm.password,
+        })
+        .then((result) => {
+          console.log(result.data.msg);
+          if (result.data.status == 0) {
+            this.$message({
+              showClose: true,
+              message: "该用户已经存在",
+              type: "error",
+            });
+          } else {
+            this.$message({
+              showClose: true,
+              message: "注册成功",
+              type: "success",
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };
 </script>
 
 <style scoped>
-.el-form {
-
-}
 .loginContainer {
   border-radius: 15px;
   background-clip: padding-box;
@@ -112,7 +143,5 @@ export default {
   margin: 0px auto 10px auto;
   text-align: left;
   transition: all 0.2s;
-
 }
-
 </style>

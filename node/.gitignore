@@ -2,6 +2,7 @@
 node_modules
 index.d.ts
 /dist
+db.js
 
 
 # local env files
