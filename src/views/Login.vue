@@ -107,6 +107,8 @@ export default {
               message: "恭喜你，登录成功",
               type: "success",
             });
+            // 登录跳转
+            this.$router.replace("/Home")
           } else {
             this.$message({
               showClose: true,
