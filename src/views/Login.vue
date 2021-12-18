@@ -98,7 +98,9 @@ export default {
           username: this.loginForm.username,
           password: this.loginForm.password,
         })
+        // 成功
         .then((result) => {
+          // 通过返回的status来确定是否成功登录
           if (result.data.status == 1) {
             this.$message({
               showClose: true,
@@ -116,6 +118,7 @@ export default {
           console.log(result.data);
           // this.msg = result.data.msg;
         })
+        // 失败
         .catch((err) => {
           console.log(err);
         });

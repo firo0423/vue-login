@@ -9,7 +9,9 @@
       class="loginContainer"
     >
       <h3 class="loginTitle">注册</h3>
-
+      <router-link to="/" class="backtext">返回登录页面</router-link>
+      <el-divider direction="horizontal" ></el-divider>
+      
       <el-form-item prop="username">
         <el-input
           type="text"
@@ -37,7 +39,7 @@
           style="magin-right: 5px"
         ></el-input>
       </el-form-item>
-      <router-link to="/" class="backtext">返回登录页面</router-link>
+      
       <el-button
         type="primary"
         size="default"
@@ -126,9 +128,13 @@ export default {
   box-shadow: 0 0 20px #e0e0e0;
 }
 .loginTitle {
+  display:block;
   float: left;
   margin: 10px auto 30px auto;
   text-align: left;
+}
+.el-divider{
+  margin-top: 50px;
 }
 .loginRemember {
   text-align: left;
@@ -140,7 +146,7 @@ export default {
   float: right;
   text-decoration: none;
   color: black;
-  margin: 0px auto 10px auto;
+  margin: 10px auto 30px auto;
   text-align: left;
   transition: all 0.2s;
 }
