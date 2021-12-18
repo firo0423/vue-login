@@ -18,12 +18,14 @@ const routes = [
     name: "Login",
     // 需要跳转的组件
     component: Login,
+    hidden: true,
   },
   // 注册页面
   {
     path: "/Register",
     name: "Register",
     component: Register,
+    hidden: true,
   },
   // Home 主页面
   {
@@ -43,8 +45,6 @@ const routes = [
       },
     ],
   },
-
-  
 ];
 // 创建实例
 const router = new VueRouter({
