@@ -17,7 +17,7 @@
           type="text"
           v-model="registerForm.username"
           placeholder="请输入用户名"
-          auto-complete="false"
+          auto-complete="off"
         ></el-input>
       </el-form-item>
       <el-form-item prop="password">
@@ -26,93 +26,123 @@
           placeholder="请输入密码"
           size="normal"
           type="password"
-          auto-complete="false"
+          auto-complete="off"
         ></el-input>
       </el-form-item>
-      <el-form-item prop="password2">
+      <el-form-item prop="checkPass">
         <el-input
-          v-model="registerForm.password2"
+          v-model="registerForm.checkPass"
           placeholder="请再次输入密码"
           size="normal"
-          auto-complete="false"
-          type="text"
+          auto-complete="off"
+          type="password"
           style="magin-right: 5px"
         ></el-input>
       </el-form-item>
-
-      <el-button
-        type="primary"
-        size="default"
-        style="width: 100%"
-        @click="register"
-        >注册</el-button
-      >
+      <el-form-item class="footer">
+        <el-button type="primary" @click="register" style="width: 72%"
+          >提交</el-button
+        >
+        <el-button @click="resetForm('form')" style="width: 25%"
+          >重置</el-button
+        >
+      </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
+// 我尼玛真服了 默认自带的规则就认pass和checkPass其他名不好使
+// prop 引入的规则名字要跟变量名字一样 不然规则函数得不到值
 import { nanoid } from "nanoid";
 export default {
   name: "Register",
   data() {
+    // 检查密码框的规则
+    var validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        if (this.registerForm.checkPass !== "") {
+          this.$refs.form.validateField("checkPass");
+        }
+        callback();
+      }
+    };
+    // 密码核实框的规则
+    var validatePass2 = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.registerForm.password) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
     return {
       registerForm: {
         username: "",
         password: "",
-        password2: "",
+        checkPass: "",
       },
       rules: {
         username: [
           { required: true, message: "请输入用户名", trigger: "blur" },
         ],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
-        password2: [
-          { required: true, message: "请输入确认密码", trigger: "blur" },
-        ],
+        password: [{ validator: validatePass, trigger: "blur" }],
+        checkPass: [{ validator: validatePass2, trigger: "blur" }],
       },
     };
   },
   methods: {
-    verify() {
-      if (this.registerForm.password !== this.registerForm.password2) {
-        this.$message({
-          showClose: true,
-          message: "两次密码不一致",
-          type: "error",
-        });
-        return;
-      }
-    },
+    // 注册提交
     register() {
-      this.verify();
-      this.$axios
-        .post(this.HOST + "/api/register", {
-          id: nanoid(),
-          username: this.registerForm.username,
-          password: this.registerForm.password,
-        })
-        .then((result) => {
-          console.log(result.data.msg);
-          if (result.data.status == 0) {
-            this.$message({
-              showClose: true,
-              message: "该用户已经存在",
-              type: "error",
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.$axios
+            .post(this.HOST + "/api/register", {
+              id: nanoid(),
+              username: this.registerForm.username,
+              password: this.registerForm.password,
+            })
+            .then((result) => {
+              console.log(result.data.msg);
+
+              if (result.data.status == 0) {
+                this.$message({
+                  showClose: true,
+                  message: "该用户已经存在",
+                  type: "error",
+                });
+              } else {
+                this.$message({
+                  showClose: true,
+                  message: "注册成功",
+                  type: "success",
+                });
+                // 注册后跳转
+                this.$router.replace("/Home");
+              }
+            })
+
+            .catch((err) => {
+              this.$message({
+                showClose: true,
+                message: "注册失败",
+                type: "error",
+              });
+              console.log(err);
             });
-          } else {
-            this.$message({
-              showClose: true,
-              message: "注册成功",
-              type: "success",
-            });
-            // 注册后跳转
-            this.$router.replace("/Home");
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+
+    // 重置
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
     },
   },
 };

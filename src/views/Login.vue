@@ -82,18 +82,12 @@ export default {
     };
   },
   methods: {
-    login(e) {
-      // 用来书写axios请求
-      // console.log(this.loginForm.password);
-      if (!this.loginForm.username) {
-        this.$message({
-          showClose: true,
-          message: "请输入账号密码",
-          type: "error",
-        });
-        return false;
-      }
-      this.$axios
+    login() {
+      // 用来提示用户问题
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+
+          this.$axios
         .post(this.HOST + "/api/login", {
           username: this.loginForm.username,
           password: this.loginForm.password,
@@ -124,24 +118,15 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-
-      // 用来提示用户问题
-      // this.$refs.form.validate((valid) => {
-      //   if (valid) {
-      //     this.$message({
-      //       showClose: true,
-      //       message: "恭喜你，登录成功",
-      //       type: "success",
-      //     });
-      //   } else {
-      //     this.$message({
-      //       showClose: true,
-      //       message: "错了哦，请正确输入账号密码",
-      //       type: "error",
-      //     });
-      //     return false;
-      //   }
-      // });
+        } else {
+          this.$message({
+            showClose: true,
+            message: "错了哦，请正确输入账号密码",
+            type: "error",
+          });
+          return false;
+        }
+      });
     },
   },
 };
