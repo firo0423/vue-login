@@ -83,6 +83,8 @@ export default {
   },
   methods: {
     login() {
+      // 响应拦截器在此引用
+      // console.log(this.postRequest);
       // 用来提示用户问题
       this.$refs.form.validate((valid) => {
         if (valid) {
@@ -92,6 +94,7 @@ export default {
           username: this.loginForm.username,
           password: this.loginForm.password,
         })
+        
         // 成功
         .then((result) => {
           // 通过返回的status来确定是否成功登录
