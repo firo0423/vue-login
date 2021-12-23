@@ -8,13 +8,13 @@ import ElementUI from 'element-ui';
 import Axios from 'axios'
 import 'element-ui/lib/theme-chalk/index.css';
 
-// 响应拦截器 也就写着玩玩 没后端
-// import {postRequest} from "./utils/api";
+// 响应拦截器
+import {postRequest} from "./utils/api";
 
 Vue.prototype.HOST = "http://localhost:4000"
 Vue.prototype.$axios = Axios
-// 响应拦截器 也就写着玩玩 没后端 this.postRequest就可以用了
-// Vue.prototype.postRequest=postRequest;
+// 响应拦截器 
+Vue.prototype.postRequest=postRequest;
 
 
 Vue.use(ElementUI);

@@ -66,7 +66,7 @@ export default {
       loginForm: {
         username: "",
         password: "",
-        code: "",
+        // code: "",
       },
       checked: "",
       captchaUrl: "",
@@ -83,50 +83,17 @@ export default {
   },
   methods: {
     login() {
-      // 响应拦截器在此引用
-      // console.log(this.postRequest);
-      // 用来提示用户问题
       this.$refs.form.validate((valid) => {
         if (valid) {
-
-          this.$axios
-        .post(this.HOST + "/api/login", {
-          username: this.loginForm.username,
-          password: this.loginForm.password,
-        })
-        
-        // 成功
-        .then((result) => {
-          // 通过返回的status来确定是否成功登录
-          if (result.data.status == 1) {
-            this.$message({
-              showClose: true,
-              message: "恭喜你，登录成功",
-              type: "success",
-            });
-            // 登录跳转
-            this.$router.replace("/Home")
-          } else {
-            this.$message({
-              showClose: true,
-              message: "错了哦，请正确输入账号密码",
-              type: "error",
-            });
-          }
-
-          console.log(result.data);
-          // this.msg = result.data.msg;
-        })
-        // 失败
-        .catch((err) => {
-          console.log(err);
-        });
+          this.postRequest(this.HOST + "/api/login", this.loginForm).then(
+            (res) => {
+              //存储用户token
+              const tokenStr = res.obj.tokenHead + res.obj.token;
+              window.sessionStorage.setItem("tokenStr", tokenStr);
+            }
+          );
         } else {
-          this.$message({
-            showClose: true,
-            message: "错了哦，请正确输入账号密码",
-            type: "error",
-          });
+          console.log("error submit!!");
           return false;
         }
       });
