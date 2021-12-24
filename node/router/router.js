@@ -7,7 +7,7 @@ const checkToken = require('../server/token/checkToken')
 router.post('/api/login',services.login)
 router.post('/api/register',services.register)
 
-router.get('/protected', function (req, res) {
+router.get('/protected',checkToken,function (req, res) {
       res.send('ok')
   })
 
