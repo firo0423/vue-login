@@ -56,9 +56,8 @@ axios.interceptors.response.use(
 axios.interceptors.request.use(
   (config) => {
     //如果存在token请求携带token
-    if (window.sessionStorage.getItem("tokenStr")) {
-      config.headers["Authorization"] =
-        window.sessionStorage.getItem("tokenStr");
+    if (window.localStorage.getItem("tokenStr")) {
+      config.headers["Authorization"] = window.localStorage.getItem("tokenStr");
     }
     return config;
   },

@@ -88,8 +88,9 @@ export default {
           this.postRequest(this.HOST + "/api/login", this.loginForm).then(
             (res) => {
               //存储用户token
-              const tokenStr = res.obj.tokenHead + res.obj.token;
-              window.sessionStorage.setItem("tokenStr", tokenStr);
+              console.log(res);
+              const tokenStr = `Bearer ${res.token}`
+              window.localStorage.setItem("tokenStr", tokenStr);
             }
           );
         } else {
