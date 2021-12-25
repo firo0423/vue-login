@@ -18,7 +18,9 @@ axios.interceptors.response.use(
         success.data.code == 401 ||
         success.data.code == 403
       ) {
+        console.log('api');
         Message.error({ message: success.data.message });
+        this.$router.replace("/");
         // 只用给错误提示
         return;
       }
@@ -32,13 +34,14 @@ axios.interceptors.response.use(
   },
   //  接口访问失败 500 401 403
   (error) => {
-    if (error.response.code == 504 || error.response.code == 404) {
+    // console.log(error.response);
+    if (error.response.status == 504 || error.response.status == 404) {
       Message.error({ message: "服务器被吃掉了" });
-    } else if (error.response.code == 403) {
+    } else if (error.response.status == 403) {
       Message.error({ message: "权限不足请联系管理员" });
       router.replace("/");
-    } else if (error.response.code == 401) {
-      Message.error({ message: "尚未登录，请登录" });
+    } else if (error.response.status == 401) {
+      Message.error({ message: error.response.data.message });
       router.replace("/");
     } else {
       if (error.response.data.message) {
@@ -74,5 +77,12 @@ export const postRequest = (url, params) => {
     method: "post",
     url: `${base}${url}`,
     data: params,
+  });
+};
+
+export const getRequest = (url) => {
+  return axios({
+    method: "get",
+    url: `${base}${url}`,
   });
 };

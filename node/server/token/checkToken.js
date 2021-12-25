@@ -13,7 +13,7 @@ module.exports = (req, res, next) => {
       } else if (err.message == "jwt must be provided") {
         res.status(401).send({ code: 401, message: "尚未登录请登录" });
       } else{
-        res.status(401).send({ code: 401, message: "状态错误，请重新登录" });
+        res.status(401).send({ code: 400, message: "状态错误，请重新登录" });
       }
       return
     }

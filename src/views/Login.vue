@@ -88,9 +88,10 @@ export default {
           this.postRequest(this.HOST + "/api/login", this.loginForm).then(
             (res) => {
               //存储用户token
-              console.log(res);
+              console.log("ok");
               const tokenStr = `Bearer ${res.token}`
               window.localStorage.setItem("tokenStr", tokenStr);
+              this.$router.replace("/Home")
             }
           );
         } else {
