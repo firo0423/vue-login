@@ -66,10 +66,10 @@ export default {
       loginForm: {
         username: "",
         password: "",
-        // code: "",
+        code: "",
       },
       checked: "",
-      captchaUrl: "",
+      captchaUrl: this.HOST + "/api/captcha",
       //   下面写校验规则
       //   写完要添加到loginForm里面
       rules: {
@@ -82,32 +82,34 @@ export default {
     };
   },
   methods: {
+    login() {
+      // 登录时执行记住用户名
+      this.remember();
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.postRequest(this.HOST + "/api/login", this.loginForm)
+            .then((res) => {
+              //存储用户token
+              const tokenStr = `Bearer ${res.token}`;
+
+              window.localStorage.setItem("tokenStr", tokenStr);
+              this.$router.replace("/Home/test1");
+            })
+            .catch((reason) => {
+              console.log("失败的登录");
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
     remember() {
       if (this.checked) {
         localStorage.setItem("username", this.loginForm.username);
       } else {
         localStorage.removeItem("username");
       }
-    },
-    login() {
-      // 登录时执行记住用户名
-      this.remember();
-      this.$refs.form.validate((valid) => {
-        if (valid) {
-          this.postRequest(this.HOST + "/api/login", this.loginForm).then(
-            (res) => {
-              //存储用户token
-              console.log("ok");
-              const tokenStr = `Bearer ${res.token}`;
-              window.localStorage.setItem("tokenStr", tokenStr);
-              this.$router.replace("/Home/test1");
-            }
-          );
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
     },
     initUsername() {
       if (localStorage.getItem("username")) {
@@ -137,6 +139,7 @@ export default {
   margin: 10px auto 30px auto;
   text-align: left;
 }
+
 .loginRemember {
   text-align: left;
   margin: 0 0 15px 0;
@@ -154,4 +157,8 @@ export default {
 .footer a:hover {
   color: black;
 }
+.el-form-item__content img {
+  float: right;
+}
+
 </style>

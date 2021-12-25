@@ -2,6 +2,15 @@
 // 创建express服务器
 const express = require("express");
 const app = express();
+const session = require("express-session")
+
+app.use(session({
+  secret: "dfjdlfajdfafdafadfadfaf",
+  cookie: { maxAge: 60 },
+  resave: true,
+  saveUninitialized: true
+}))
+
 // 注册解析 表单数据的 body-parser 用来解析node.js body内容
 const bodyParser = require("body-parser");
 // 将请求响应设置content-type设置为application/json

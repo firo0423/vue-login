@@ -20,7 +20,6 @@ axios.interceptors.response.use(
       ) {
         console.log('api');
         Message.error({ message: success.data.message });
-        this.$router.replace("/");
         // 只用给错误提示
         return;
       }
@@ -42,6 +41,7 @@ axios.interceptors.response.use(
       router.replace("/");
     } else if (error.response.status == 401) {
       Message.error({ message: error.response.data.message });
+      localStorage.removeItem('tokenStr')
       router.replace("/");
     } else {
       if (error.response.data.message) {
