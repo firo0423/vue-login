@@ -82,16 +82,25 @@ export default {
     };
   },
   methods: {
+    remember() {
+      if (this.checked) {
+        localStorage.setItem("username", this.loginForm.username);
+      } else {
+        localStorage.removeItem("username");
+      }
+    },
     login() {
+      // 登录时执行记住用户名
+      this.remember();
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.postRequest(this.HOST + "/api/login", this.loginForm).then(
             (res) => {
               //存储用户token
               console.log("ok");
-              const tokenStr = `Bearer ${res.token}`
+              const tokenStr = `Bearer ${res.token}`;
               window.localStorage.setItem("tokenStr", tokenStr);
-              this.$router.replace("/Home")
+              this.$router.replace("/Home/test1");
             }
           );
         } else {
@@ -100,6 +109,15 @@ export default {
         }
       });
     },
+    initUsername() {
+      if (localStorage.getItem("username")) {
+        this.checked = true;
+      }
+      this.loginForm.username = localStorage.getItem("username");
+    },
+  },
+  mounted: function () {
+    this.initUsername();
   },
 };
 </script>

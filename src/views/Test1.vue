@@ -22,9 +22,7 @@ export default {
       });
     },
     checktoken() {
-      this.getRequest(this.HOST + "/api/protected").then((res) => {
-        console.log(1);
-      });
+      this.getRequest(this.HOST + "/api/protected")
     },
   },
   mounted: function(){
