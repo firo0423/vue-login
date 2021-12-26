@@ -1,6 +1,6 @@
 // 处理业务逻辑
 const db = require("../db/db.js");
-const createToken = require("./token/setToken.js");
+const setToken = require("./token/setToken.js");
 const svgCaptcha = require("svg-captcha");
 // 用于验证码校验
 global.code;
@@ -11,7 +11,7 @@ exports.login = (req, res) => {
   let username = req.body.username;
   let pwd = req.body.password;
   let code = req.body.code;
-  console.log(global.code);
+  
   if (global.code == code) {
     // 查询语句
     let sql = "select * from student where username = " + '"' + username + '"';
@@ -21,8 +21,9 @@ exports.login = (req, res) => {
       } else {
         // [ RowDataPacket { password: '123', username: 'admin', id: 1 } ]
         if (result[0].password == pwd) {
-          let token = createToken(username);
-          return res.json({ code: 200, message: "登录成功", token: token });
+          let accessToken = setToken.setAccessToken(username);
+          let refreshToken = setToken.setRefreshToken(username);
+          return res.json({ code: 200, message: "登录成功", accessToken: accessToken , refreshToken:refreshToken});
         }
         return res.json({ code: 401, message: "密码错误" });
       }
@@ -76,6 +77,7 @@ exports.captcha = (req, res) => {
   var codeData = {
     img: captcha.data,
   };
+  console.log(global.code);
   res.type("svg");
   res.status(200).send(captcha.data);
 };

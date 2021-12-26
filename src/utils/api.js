@@ -18,16 +18,25 @@ axios.interceptors.response.use(
         success.data.code == 401 ||
         success.data.code == 403
       ) {
-        console.log('api');
+        console.log("api");
         Message.error({ message: success.data.message });
         // 只用给错误提示
         return;
       }
+      // 为刷新令牌准备
+      if (success.data.code == 200) {
+        Message.success({ message: success.data.message });
+        window.localStorage.setItem(
+          "tokenStr",
+          `Bearer ${success.data.accessToken} ${success.data.refreshtToken}`
+        );
+      }
       // 业务逻辑成功
-      if (success.data.message) {
+      else if (success.data.message) {
         Message.success({ message: success.data.message });
       }
     }
+
     // 返回对象 不然拿不到数据
     return success.data;
   },
@@ -41,7 +50,7 @@ axios.interceptors.response.use(
       router.replace("/");
     } else if (error.response.status == 401) {
       Message.error({ message: error.response.data.message });
-      localStorage.removeItem('tokenStr')
+      localStorage.removeItem("tokenStr");
       router.replace("/");
     } else {
       if (error.response.data.message) {

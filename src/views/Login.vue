@@ -90,7 +90,7 @@ export default {
           this.postRequest(this.HOST + "/api/login", this.loginForm)
             .then((res) => {
               //存储用户token
-              const tokenStr = `Bearer ${res.token}`;
+              const tokenStr = `Bearer ${res.accessToken} ${res.refreshToken}`;
 
               window.localStorage.setItem("tokenStr", tokenStr);
               this.$router.replace("/Home/test1");
@@ -160,5 +160,4 @@ export default {
 .el-form-item__content img {
   float: right;
 }
-
 </style>
